@@ -20,6 +20,7 @@ const env = loadEnv(mode, process.cwd(), '')
 
 return {
       plugins: [react(), tailwindcss()],
+      base: '/weatherapp-tailwind',
       define: {
         'import.meta.env.VITE_API_KEY': JSON.stringify(env.VITE_API_KEY)
       },
