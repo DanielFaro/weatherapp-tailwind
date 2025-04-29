@@ -69,6 +69,7 @@ function App() {
       setLatLong({ lat: place.geometry.location.lat(), long: place.geometry.location.lng()});
       setLocation(place.formatted_address);
     },
+    // libraries: {["places"]},
     options: {
       types: ["(cities)"],
     }
