@@ -22,61 +22,60 @@ function App() {
   const autoCompleteRef = useRef(null);
   const [autocomplete, setAutocomplete] = useState(null);
 
-  useEffect(() => {
-    const loadAutocomplete = () => {
-      if (!window.google || !window.google.maps || !autoCompleteRef.current) return;
-      const newAutocomplete = new window.google.maps.places.Autocomplete(
-        autoCompleteRef.current,
-        {
-          fields: ['address_components', 'formatted_address', 'geometry', 'name'],
-          types: ['(cities)'],
-        }
-      );
-      newAutocomplete.addListener('place_changed', () =>
-        handlePlaceSelect(newAutocomplete)
-      );
-      setAutocomplete(newAutocomplete);
-    };
+  // useEffect(() => {
+  //   const loadAutocomplete = () => {
+  //     if (!window.google || !window.google.maps || !autoCompleteRef.current) return;
+  //     const newAutocomplete = new window.google.maps.places.Autocomplete(
+  //       autoCompleteRef.current,
+  //       {
+  //         fields: ['address_components', 'formatted_address', 'geometry', 'name'],
+  //         types: ['(cities)'],
+  //       }
+  //     );
+  //     newAutocomplete.addListener('place_changed', () =>
+  //       handlePlaceSelect(newAutocomplete)
+  //     );
+  //     setAutocomplete(newAutocomplete);
+  //   };
 
-    if (!autocomplete) {
-      loadAutocomplete();
-    }
-  }, [autocomplete]);
+  //   if (!autocomplete) {
+  //     loadAutocomplete();
+  //   }
+  // }, [autocomplete]);
 
-  console.log("location ==", location);
-  //console.log("city ==", city)
+  // console.log("location ==", location);
+  // //console.log("city ==", city)
 
-  const handlePlaceSelect = (autocompleteInstance) => {
-    const place = autocompleteInstance.getPlace();
-    if (!place.geometry) {
-      console.error('No details available for input: \'', place.name, '\'');
-      return;
-    }
+  // const handlePlaceSelect = (autocompleteInstance) => {
+  //   const place = autocompleteInstance.getPlace();
+  //   if (!place.geometry) {
+  //     console.error('No details available for input: \'', place.name, '\'');
+  //     return;
+  //   }
 
-    //console.log("Place ==", place);
-    setLocation(place.formatted_address);
-    setLatLong({ lat: place.geometry.location.lat(), long: place.geometry.location.lng()});
-    //onSelect(place); // Pass the selected place data to the parent component
-  };
+  //   //console.log("Place ==", place);
+  //   setLocation(place.formatted_address);
+  //   setLatLong({ lat: place.geometry.location.lat(), long: place.geometry.location.lng()});
+  //   //onSelect(place); // Pass the selected place data to the parent component
+  // };
 
   const handleThemeChange = (theme) => {
     setTheme(theme)
   }
 
-  // const { ref } = usePlacesWidget({
-  //   apiKey: import.meta.env.VITE_GOOGLE_PLACES_API_KEY,
-  //   onPlaceSelected: (place) => {
-  //     setLatLong({ lat: place.geometry.location.lat(), long: place.geometry.location.lng()});
-  //     setLocation(place.formatted_address);
-  //   },
-  //   options: {
-  //     types: ["(cities)"],
-  //   }
-  // });
+  const { ref } = usePlacesWidget({
+    apiKey: import.meta.env.VITE_GOOGLE_PLACES_API_KEY,
+    onPlaceSelected: (place) => {
+      setLatLong({ lat: place.geometry.location.lat(), long: place.geometry.location.lng()});
+      setLocation(place.formatted_address);
+    },
+    options: {
+      types: ["(cities)"],
+    }
+  });
  
   const searchCity = async () => {
     // for first load
-    console.log("first search")
     try {
       const res = await fetch(`https://maps.googleapis.com/maps/api/geocode/json?latlng=${latlong.lat},${latlong.long}&result_type=locality&key=${import.meta.env.VITE_GOOGLE_PLACES_API_KEY}`)
       const data = await res.json();
@@ -157,8 +156,8 @@ useEffect(() => {
              </div>
               <input
                 className='w-1/2 p-2'
-                ref={autoCompleteRef} 
-                onChange={(e) => setSearchTerm(e.target.value)}
+                ref={ref} 
+                //onChange={(e) => setSearchTerm(e.target.value)}
                 placeholder='Enter a city'
               />
             </div>
